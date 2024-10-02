@@ -6,7 +6,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 
 if __name__ == "__main__":
     print("print layers")
-    access_token = "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"
+    access_token = "<TOKEN>"
     model = AutoModelForCausalLM.from_pretrained(
         "mistralai/Mistral-7B-v0.1",
         cache_dir="./mistral",
