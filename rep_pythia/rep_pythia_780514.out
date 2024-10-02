@@ -1,0 +1,32 @@
+Tue Aug 20 11:53:12 AM CEST 2024
+****GENERATING REPS FOR PYTHIA****
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:03<00:03,  3.98s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:05<00:00,  2.58s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:05<00:00,  2.79s/it]
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+GPTNeoXForCausalLM(
+  (gpt_neox): GPTNeoXModel(
+    (embed_in): Embedding(50432, 4096)
+    (emb_dropout): Dropout(p=0.0, inplace=False)
+    (layers): ModuleList(
+      (0-31): 32 x GPTNeoXLayer(
+        (input_layernorm): LayerNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (post_attention_layernorm): LayerNorm((4096,), eps=1e-05, elementwise_affine=True)
+        (post_attention_dropout): Dropout(p=0.0, inplace=False)
+        (post_mlp_dropout): Dropout(p=0.0, inplace=False)
+        (attention): GPTNeoXAttention(
+          (rotary_emb): GPTNeoXRotaryEmbedding()
+          (query_key_value): Linear(in_features=4096, out_features=12288, bias=True)
+          (dense): Linear(in_features=4096, out_features=4096, bias=True)
+          (attention_dropout): Dropout(p=0.0, inplace=False)
+        )
+        (mlp): GPTNeoXMLP(
+          (dense_h_to_4h): Linear(in_features=4096, out_features=16384, bias=True)
+          (dense_4h_to_h): Linear(in_features=16384, out_features=4096, bias=True)
+          (act): GELUActivation()
+        )
+      )
+    )
+    (final_layer_norm): LayerNorm((4096,), eps=1e-05, elementwise_affine=True)
+  )
+  (embed_out): Linear(in_features=4096, out_features=50432, bias=False)
+)
+Tue Aug 20 11:53:22 AM CEST 2024
