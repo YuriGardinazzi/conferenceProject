@@ -17,7 +17,7 @@ if __name__ == "__main__":
     print("****GENERATING REPS FOR PYTHIA****")
     OUTPUT_DIR = "./mistral_sst"
 
-    access_token = "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"
+    access_token = "<TOKEN>"
     model = AutoModelForCausalLM.from_pretrained(
         "mistralai/Mistral-7B-v0.1",
         cache_dir="./mistral",
