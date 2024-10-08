@@ -1,8 +1,6 @@
 import numpy as np
 import pandas as pd
 from transformers import LlamaForCausalLM, LlamaTokenizer, pipeline,AutoTokenizer, AutoModelForCausalLM
-#from IntermediateExtractor import IntermediateExtractor
-#from Inferencer import Inferencer
 import torch
 from datasets import load_dataset,concatenate_datasets
 from datetime import datetime
