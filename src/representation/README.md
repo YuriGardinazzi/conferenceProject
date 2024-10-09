@@ -17,7 +17,7 @@ For the parameter ```--model``` use the string used to call the model from Huggi
 
 ## Extraction example
 ```bash
-python extract.py --model="meta-llama/Llama-2-7b-hf" \
+python rep-extraction/extract.py --model="meta-llama/Llama-2-7b-hf" \
                   --dataset="sst" \
                   --output_folder="rep-llama2-7b" \
                   --access_token="<your access token from HF>"
