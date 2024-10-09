@@ -104,7 +104,7 @@ def run(reps_path,knn,dim,output_folder,output_file):
         if layers_res[i[0]-1] != layers_res[i[1]]:
             merged_output.append((i[2],layers_res[i[0]-1],layers_res[i[1]]))
     
-    with open(zzio.params["output_zigzag"],"w") as out_file:
+    with open(output_folder+os.sep+output_file,"w") as out_file:
         csv_out=csv.writer(out_file)
         csv_out.writerow(["dimension","birth","death"])
         for row in merged_output:
