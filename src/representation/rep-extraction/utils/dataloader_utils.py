@@ -50,7 +50,7 @@ class DataCollatorForCausalLM:
     """Collate examples for supervised fine-tuning."""
 
     pad_token_id: int
-    #max_seq_len: int
+    max_seq_len: int
 
     # check if we can set padding value in labels == eos_token_id_directly (as the attention mask should take into account the gradient masking)
 
