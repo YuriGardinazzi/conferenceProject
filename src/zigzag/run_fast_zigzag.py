@@ -123,3 +123,9 @@ if __name__ == '__main__':
     parser.add_argument('--output_file',type=str,help='Output file name, the file extension used should be .csv')
 
     args = parser.parse_args()
+    
+    run(reps_path=args.reps_path,
+        knn=args.knn,
+        dim=args.dim,
+        output_folder=args.output_folder,
+        output_file=args.output_file)
