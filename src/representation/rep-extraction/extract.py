@@ -82,9 +82,9 @@ def run(model_name,output_folder,dataset,access_token,layer_number):
 
 if __name__ == "__main__":
 
-    model_list = {'meta-llama/Llama-2-7b':32,
-                  'meta-llama/Llama-2-13b':40,
-                  'meta-llama/Llama-2-70b':80,
+    model_list = {'meta-llama/Llama-2-7b-hf':32,
+                  'meta-llama/Llama-2-13b-hf':40,
+                  'meta-llama/Llama-2-70b-hf':80,
                   'meta-llama/Meta-Llama-3-8B':32,
                   'meta-llama/Meta-Llama-3-70B':80,
                   'EleutherAI/pythia-6.9b-deduped':32,
