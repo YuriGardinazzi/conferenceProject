@@ -6,9 +6,9 @@ For the parameter ```--model``` use the string used to call the model from Huggi
 
  | Model  | ```--model``` input |
  |:------:|:---------:|
- |Llama 2 7B | meta-llama/Llama-2-7b  |
- |Llama 2 13B | meta-llama/Llama-2-13b |
- |Llama 2 70B | meta-llama/Llama-2-70b |
+ |Llama 2 7B | meta-llama/Llama-2-7b-hf  |
+ |Llama 2 13B | meta-llama/Llama-2-13b-hf |
+ |Llama 2 70B | meta-llama/Llama-2-70b-hf |
  |Llama 3 8B  | meta-llama/Meta-Llama-3-8B |
  |Llama 3 70B | meta-llama/Meta-Llama-3-70B |
  |Pythia 6.9B | EleutherAI/pythia-6.9b-deduped |
