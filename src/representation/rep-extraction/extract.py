@@ -108,7 +108,7 @@ if __name__ == "__main__":
         output_folder=args.output_folder,
         dataset=args.dataset,
         access_token=args.access_token,
-        model_list=model_list[args.model])
+        layer_number=model_list[args.model])
     # check dataset string that has to be pile or sst.
 
 
