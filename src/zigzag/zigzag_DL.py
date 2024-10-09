@@ -20,7 +20,7 @@ class IO:
     def __init__(self, config_file = None,input_parameters = None, verbose = False, scriptmode = False):        
 
         self.verbose = verbose
-        if scriptmode: self.args = vars(self.parse_arguments())s
+        if scriptmode: self.args = vars(self.parse_arguments())
         if  input_parameters != None:
             self.params = input_parameters
         elif config_file is None:
