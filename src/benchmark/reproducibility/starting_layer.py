@@ -29,7 +29,7 @@ def run_pythia(access_token,model_name,block_number,method):
     """
 
     model = PythiaShortTransformer.from_pretrained(model_name, device_map="auto",token=access_token)
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    tokenizer = AutoTokenizer.from_pretrained(model_name,token=access_token)
 
     dataset = load_dataset("NeelNanda/pile-10k",split="train",trust_remote_code=True)
 
@@ -67,8 +67,8 @@ def run(access_token,model_name,block_number,method):
         method (str): biscore or angular
     """
     
-    model = ShortTransformer.from_pretrained(model_name, device_map="auto",token=access_token)
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = ShortTransformer.from_pretrained(pretrained_model_name_or_path=model_name, device_map="auto",token=access_token)
+    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path=model_name,token=access_token)
 
     dataset = load_dataset("NeelNanda/pile-10k",split="train",trust_remote_code=True)
 
