@@ -18,6 +18,15 @@ from pythia_version.short_transformers.utils import (
 )
 
 def run_pythia(access_token,model_name,block_number,method):
+    """Get the best starting point to prune <block_number> layers
+    of the given model. method as to be equal to "biscore" or "angular"
+    --Pythia version
+    Args:
+        access_token (str): User Hugging Face token
+        model_name (str): name of the model 
+        block_number (int): number of layers to cut
+        method (str): biscore or angular
+    """
     
     model = PythiaShortTransformer.from_pretrained(model_name, device_map="auto",token=access_token)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -48,6 +57,15 @@ def run_pythia(access_token,model_name,block_number,method):
 
 
 def run(access_token,model_name,block_number,method):
+    """Get the best starting point to prune <block_number> layers
+    of the given model. method as to be equal to "biscore" or "angular"
+
+    Args:
+        access_token (str): User Hugging Face token
+        model_name (str): name of the model 
+        block_number (int): number of layers to cut
+        method (str): biscore or angular
+    """
     
     model = ShortTransformer.from_pretrained(model_name, device_map="auto",token=access_token)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -87,6 +105,19 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run and reproduce benchmarks')
     
     parser.add_argument('--model', type=str, help='input model, e.g. "meta-llama/Meta-Llama-3-8B"')
-    parser.add_argument('--block number',type=int,help='Number of blocks to cut')
+    parser.add_argument('--block_number',type=int,help='Number of blocks to cut')
     parser.add_argument('--token',type=str,help='User Hugging Face token')
     parser.add_argument('--method',type=str,help='personal access token for hugging face')
+
+    args = parser.parse_args()
+
+    if "pythia" in args.model:
+        run_pythia(model_name=args.model,
+                   block_number=args.block_number,
+                   method=args.method,
+                   access_token=args.token)
+    else:
+        run(model_name=args.model,
+            block_number=args.block_number,
+            method=args.method,
+            access_token=args.token)
