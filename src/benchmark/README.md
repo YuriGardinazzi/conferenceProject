@@ -40,7 +40,7 @@ python benchmark.py --personalized \
                     --task="mmlu"\
                     --start_block=5\
                     --end_block=15\
-                    --output_folder="<path/where/the/output/is/saved"
+                    --output_folder="<path/where/the/output/is/saved"\
                     --token="<your Hugging Face token>"
 ```
 ### Full model
@@ -48,7 +48,7 @@ python benchmark.py --personalized \
 python benchmark.py --full \
                     --model="meta-llama/Llama-2-7b-hf"\
                     --task="mmlu"\
-                    --output_folder="<path/where/the/output/is/saved"
+                    --output_folder="<path/where/the/output/is/saved"\
                     --token="<your Hugging Face token>"
 ```
 
