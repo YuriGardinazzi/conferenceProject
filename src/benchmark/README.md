@@ -27,33 +27,38 @@ It is possible to run the benchmarks in three possible setup by deciding which a
 ### Our method
 ```bash
 python benchmark.py --persistence \
-                    --model="meta-llama/Llama-2-7b"\
+                    --model="meta-llama/Llama-2-7b-hf"\
                     --task="mmlu"\
-                    --zigzag_output="<path/to/the/zigzag/csv-file"
+                    --zigzag_output="<path/to/the/zigzag/csv-file"\
+                    --output_folder="<path/where/the/output/is/saved"\
+                    --token="<your Hugging Face token>"
 ```
 ### Personalized cut
 ```bash
 python benchmark.py --personalized \
-                    --model="meta-llama/Llama-2-7b"\
+                    --model="meta-llama/Llama-2-7b-hf"\
                     --task="mmlu"\
-                    --zigzag_output="<path/to/the/zigzag/csv-file"\
                     --start_block=5\
-                    --end_block=15
+                    --end_block=15\
+                    --output_folder="<path/where/the/output/is/saved"
+                    --token="<your Hugging Face token>"
 ```
 ### Full model
 ```bash
 python benchmark.py --full \
-                    --model="meta-llama/Llama-2-7b"\
-                    --task="mmlu"
+                    --model="meta-llama/Llama-2-7b-hf"\
+                    --task="mmlu"\
+                    --output_folder="<path/where/the/output/is/saved"
+                    --token="<your Hugging Face token>"
 ```
 
 ### Model names used in this work
 
  | Model  | ```--model``` input |
  |:------:|:---------:|
- |Llama 2 7B | meta-llama/Llama-2-7b  |
- |Llama 2 13B | meta-llama/Llama-2-13b |
- |Llama 2 70B | meta-llama/Llama-2-70b |
+ |Llama 2 7B | meta-llama/Llama-2-7b-hf  |
+ |Llama 2 13B | meta-llama/Llama-2-13b-hf |
+ |Llama 2 70B | meta-llama/Llama-2-70b-hf |
  |Llama 3 8B  | meta-llama/Meta-Llama-3-8B |
  |Llama 3 70B | meta-llama/Meta-Llama-3-70B |
  |Pythia 6.9B | EleutherAI/pythia-6.9b-deduped |

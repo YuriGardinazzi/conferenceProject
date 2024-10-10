@@ -21,7 +21,7 @@ def check_dir(path, model_name):
 
     return
 
-def p_column_knn(betti,ph_sim_betti):
+def similarity_persistance(betti,ph_sim_betti):
     n_layers = len(betti)
     assert n_layers == int(ph_sim_betti.shape[0])
     tmp = np.zeros((n_layers,n_layers))
@@ -37,6 +37,7 @@ def layers_to_cut_given_r(r,p=0.9,layer_norm_added=True):
     '''
     r = result of the function p_column_knn
     p = value of r above which we cut layers
+    layer_norm_added = True if we consider also the output_layer_norm 
     '''
     res = []
     maximum = max(r)
@@ -45,21 +46,20 @@ def layers_to_cut_given_r(r,p=0.9,layer_norm_added=True):
             res.append(i)
     return res
 
-def full_benchmark(output_path,model_path,model_name,tasks):
+def full_benchmark(output_path,model_name,task,access_token):
 
-    access_token =  "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"
-    model = HFLM(pretrained=model_path,\
-                 tokenizer=model_path,\
+    model = HFLM(pretrained=model_name,\
+                 tokenizer=model_name,\
                  parallelize=True,\
                  device_map_option="auto", token=access_token)
     
     results = lm_eval.simple_evaluate(model=model,\
-                     tasks= tasks,\
-                    device="auto",\
-                    batch_size="auto",\
-                    num_fewshot=5)
+                                    tasks= task,\
+                                    device="auto",\
+                                    batch_size="auto",\
+                                    num_fewshot=5)
     
-    out_file = output_path + os.sep + model_name +"_"+tasks[0] + "full_bmk.json"
+    out_file = output_path + os.sep + model_name +"_"+task[0] + "full_bmk.json"
     with open(out_file,'w',encoding='utf-8') as f:
             json.dump(results['results'],f,ensure_ascii=False,indent=4)
 
@@ -67,35 +67,55 @@ def full_benchmark(output_path,model_path,model_name,tasks):
 
 
 
-def load_and_cut(layers,model):
+def load_and_cut(layers,model,model_name):
+    """Cut the layers of the given model
 
+    Args:
+        layers (list): 
+        model (pytorch model): model from which the layers will be cut
+        model_name (str): name of the model
+    Returns:
+        model: model with reduced layers
+    """
     new_layers = torch.nn.ModuleList()
 
     remove_layers = layers
     count = 0
-    #len_layers = len(model._model.model.layers)
     len_layers = len(model._model.model.layers)
-            # 32 is the number of layers of llama2
     for i in range(0, len_layers):
         if i not in remove_layers:
-            #layer = model._model.model.layers[i]
-            layer = model._model.model.layers[i]
-            print("DIR:",dir(layer))
+            layer=''
+            if 'pythia' in model_name:
+                layer = model.gpt_neox.layers[i]
+            else: 
+                layer = model._model.model.layers[i]
             layer.layer_idx = count
             layer.self_attn.layer_idx=count
-            #layer.self_attn.layer_idx = count
             new_layers.append(layer)
             count += 1
-    model._model.model.layers = new_layers
+            
+    if 'pythia' in model_name:
+        model.gpt_neox.layers = new_layers
+    else:    
+        model._model.model.layers = new_layers
     changed_num_hidden_layers = len_layers - len(remove_layers)
     model.config.num_hidden_layers = changed_num_hidden_layers
 
 
     return model  
 
-def benchmark_with_cuts(output_path,model_path,tasks,betti_path,zigzag_layers,model_name,begin_block=0,end_block=0):
+def benchmark_with_cuts(output_path,model_name,task,zigzag_output,zigzag_layers,access_token):
+    """Run the benchmark with the persistence similiarity method
 
-    pds = post_process.read_pd_from_csv(betti_path, max_dim = 5)
+    Args:
+        output_path (string): Path of the folder where to store the output
+        model_name (string): String with the model name on Hugging Face
+        task (list): list with strings of the type ['<benchmark>']
+        zigzag_output (string): Path to the output of the zigzag
+        zigzag_layers (int): Number of layers with intersections layers
+        access_token (string): Hugging Face token
+    """
+    pds = post_process.read_pd_from_csv(zigzag_output, max_dim = 5)
     pp = POSTPROCESS(pds = pds, num_layers = zigzag_layers, start_ind = 1, zigzag = True, debug = False)
 
     #find betti number and phsim
@@ -108,7 +128,7 @@ def benchmark_with_cuts(output_path,model_path,tasks,betti_path,zigzag_layers,mo
 
     for p in [0.8,0.9]:
             
-        r = p_column_knn(b1,psim_1)
+        r = similarity_persistance(b1,psim_1)
         list_layers = layers_to_cut_given_r(r,p=0.9)
         
         cut_path = output_path+os.sep+'cuts_'+model_name+str(p)+'.json'
@@ -117,82 +137,112 @@ def benchmark_with_cuts(output_path,model_path,tasks,betti_path,zigzag_layers,mo
 
         print(f"BMK with {p} as threshold")
 
-        r = p_column_knn(b1,psim_1)
+        r = similarity_persistance(b1,psim_1)
         list_layers = layers_to_cut_given_r(r,p=p)
-        print("LAYERS BEING CUT:\n",list_layers)
-        print(f"{begin_block} - {end_block}")
-        access_token = "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"
-        my_model = HFLM(pretrained=model_path,\
-                        tokenizer=model_path,\
+
+        my_model = HFLM(pretrained=model_name,\
+                        tokenizer=model_name,\
                         parallelize=True,\
                         device_map_option="auto",token=access_token)
-        if (begin_block > 0) and (end_block > 0):
-            list_layers = [i for i in range(int(begin_block),int(end_block)+1)]  
-            print("INPUT LAYERES TO CUT:\n",list_layers)
-        else:
-            print("STANDARD CUT")
-        print("ACTUAL CUT: ",list_layers)
-        res_model = load_and_cut(layers = list_layers,model=my_model)
-        results = lm_eval.simple_evaluate(model=res_model,\
-                                          tasks= tasks,\
-                                          device="auto",\
-                                          batch_size="auto",\
-                                          num_fewshot=5)
 
-        bmk_path = output_path + os.sep + model_name + '_threshold_'+str(p)+tasks[0]+'.json'
-        if (begin_block > 0) and (end_block >  0):
-            bmk_path = output_path + os.sep + model_name+'_'+tasks[0] +'_'+ str(begin_block) + '_' + str(end_block)+'.json'
-        with open(bmk_path,'w',encoding='utf-8') as f:
-            json.dump(results['results'],f,ensure_ascii=False,indent=4)
-        del res_model
-        if (begin_block > 0) and (end_block > 0):
-            break #no need to cycle
+        res_model = load_and_cut(layers = list_layers,model=my_model,model_name=model_name)
+        results = lm_eval.simple_evaluate(model=res_model,\
+                                          tasks= task,\
+                                          device="auto",\
+                                          batch_size="auto")
+    return
+
+def benchmark_with_block_cuts(output_path,model_name,task,access_token,begin_block=0,end_block=0):
+    """Run the benchmark with a given block of layers to cut
+
+    Args:
+        output_path (string): Path of the folder where to store the output
+        model_name (string): String with the model name on Hugging Face
+        task (list):  list with strings of the type ['<benchmark>']
+        access_token (string): User Hugging Face token
+        begin_block (int): First layer to cut of the block. Defaults to 0.
+        end_block (int): Last layer to cut of the block. Defaults to 0.
+    """
+            
+
+    print(f"About to cut: [{begin_block},{end_block}]")
+    my_model = HFLM(pretrained=model_name,\
+                    tokenizer=model_name,\
+                    parallelize=True,\
+                    device_map_option="auto",token=access_token)
+
+    list_layers = [i for i in range(int(begin_block),int(end_block)+1)]  
+
+    print("Block of layers being cut: ",list_layers)
+    res_model = load_and_cut(layers = list_layers,model=my_model,model_name=model_name)
+    results = lm_eval.simple_evaluate(model=res_model,\
+                                    tasks= task,\
+                                    device="auto",\
+                                    batch_size="auto",\
+                                    num_fewshot=5)
+
+
+    bmk_path = output_path + os.sep + model_name+'_'+task[0] +'_'+ str(begin_block) + '_' + str(end_block)+'.json'
+    with open(bmk_path,'w',encoding='utf-8') as f:
+        json.dump(results['results'],f,ensure_ascii=False,indent=4)
+    del res_model
+
 
     return
-if __name__ == "__main__":
-    print("BENCHMARK - v.0.1")
-    #print("The following benchmark")
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--model_path', help='path of the model to load')
-    parser.add_argument('--output_path', help='path of the model to load')
+if __name__ == "__main__":
+
+    #Model_list = {'<model>': number_of_layers+output}
+    #Note that in this case the layers are N_layers+1 because in our case the representations
+    #are are taken with also the output_layernorm
+    model_list = {'meta-llama/Llama-2-7b-hf':33,
+                  'meta-llama/Llama-2-13b-hf':41,
+                  'meta-llama/Llama-2-70b-hf':81,
+                  'meta-llama/Meta-Llama-3-8B':33,
+                  'meta-llama/Meta-Llama-3-70B':81,
+                  'EleutherAI/pythia-6.9b-deduped':33,
+                  'mistralai/Mistral-7B-v0.1':33}
+    
+    parser = argparse.ArgumentParser(description='Run and reproduce benchmarks')
+    parser.add_argument('--full',  action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument('--persistence',  action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument('--personalized',  action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument('--output_folder', help='path where the output will be saved')
     parser.add_argument('--model_name',help="name of the model run")
-    parser.add_argument('--zigzag_layers', help='number of layers with intersection layers',type=int)
-    parser.add_argument('--betti_path',help='folder of the output file of zigzag')
-    parser.add_argument('--tasks',help="benchmarks to do")
-    parser.add_argument('--full', help='Boolean value to run the full benchmarks without cuts')
-    parser.add_argument('--begin',help="Beginning of the block of layers to cut",default=None,type=int)
-    parser.add_argument('--end', help="End of the block of layers to cut",default=None,type=int)
+    parser.add_argument('--zigzag_output',help='folder of the output file of zigzag')
+    parser.add_argument('--task',help="benchmark to do")
+    parser.add_argument('--start_block',help="Beginning of the block of layers to cut",type=int)
+    parser.add_argument('--end_block', help="End of the block of layers to cut",type=int)
+    parser.add_argument('--token', help="Your Hugging Face token",type=str)
     args = parser.parse_args()
 
-    assert args.model_path != None and args.output_path != None and args.zigzag_layers != None and args.model_name != None and args.betti_path != None and args.tasks != None
+    #TODO: check on consistency of parameters
+    #assert args.model_path != None and args.output_path != None and args.zigzag_layers != None and args.model_name != None and args.betti_path != None and args.tasks != None
 
-    print("running benchmark with the follow parameters:\n",args)
 
-    check_dir(path=args.output_path,\
-              model_name=args.model_name)
+    check_dir(path=args.output_folder)
     final_tasks = [args.tasks]    
-    final_out_path = '.'+os.sep+args.output_path + os.sep + args.model_name
+    final_out_path = args.output_path
 
-    print(f"args: {args.full} - {type(args.full)}")
-    if args.full=='T':
+    if args.full:
         print(f"RUNNING FULL BENCHMARK {args.full}-{type(args.full)}")
-        full_benchmark(model_path = args.model_path,\
-                        model_name = args.model_name,\
-                        output_path=final_out_path,\
-                        tasks=final_tasks)
+        full_benchmark(model_name = args.model_name,
+                        output_path=final_out_path,
+                        task=final_tasks,
+                        access_token=args.token)
         exit()
-    else:
-        print("RUNNING CUTS")
-        begin_block = args.begin
-        end_block = args.end
-        print(f"Start {begin_block} End {end_block}")
+    if args.persistence:
         benchmark_with_cuts(output_path=final_out_path,\
-                        model_path=args.model_path,\
-                        tasks=final_tasks,\
-                        betti_path=args.betti_path,\
-                        zigzag_layers=args.zigzag_layers,\
                         model_name=args.model_name,\
-                        begin_block=int(begin_block),\
-                        end_block=int(end_block))
-
+                        task=final_tasks,\
+                        zigzag_output=args.zigzag_output,\
+                        zigzag_layers= model_list[args.model_name]*2,\
+                        access_token=args.token)
+        exit()
+    if args.personalized:
+        benchmark_with_block_cuts(output_path = final_out_path,
+                                  model_name=args.model_name,
+                                  task=final_tasks,
+                                  begin_block=args.start_block,
+                                  end_block=args.end_block,
+                                  access_token=args.token)
