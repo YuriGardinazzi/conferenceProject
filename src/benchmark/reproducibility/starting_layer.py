@@ -11,7 +11,7 @@ from short_transformers.utils import (
 )
 
 from pythia_version.short_transformers.short_transformer import ShortTransformer as PythiaShortTransformer
-from pythia_version.short_transformers.dist import pythia_bi_score, pythia_angular_distance_all_tokens
+from pythia_version.short_transformers.dist import bi_score as pythia_bi_score, angular_distance_all_tokens as pythia_angular_distance_all_tokens
 from pythia_version.short_transformers.utils import (
     get_scored_blocks as pythia_get_scored_blocks,
     get_best_pruning_start as pythia_get_best_pruning_start,
@@ -27,7 +27,7 @@ def run_pythia(access_token,model_name,block_number,method):
         block_number (int): number of layers to cut
         method (str): biscore or angular
     """
-    
+
     model = PythiaShortTransformer.from_pretrained(model_name, device_map="auto",token=access_token)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
