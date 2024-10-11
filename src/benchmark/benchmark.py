@@ -220,7 +220,7 @@ if __name__ == "__main__":
     #assert args.model_path != None and args.output_path != None and args.zigzag_layers != None and args.model_name != None and args.betti_path != None and args.tasks != None
 
 
-    check_dir(path=args.output_folder)
+    check_dir(path=args.output_folder, model_name=args.model_name)
     final_tasks = [args.tasks]    
     final_out_path = args.output_path
 
