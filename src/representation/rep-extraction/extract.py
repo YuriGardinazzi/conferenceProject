@@ -80,6 +80,9 @@ def run(model_name,output_folder,dataset,access_token,layer_number):
     for name in target_layers:
         np.save(f"{output_folder}/rep-{name}.npy",EA.hidden_states[name])
 
+    if name == "pythia":
+        os.rename(output_folder+os.sep+"rep-gpt_neox.final_layer_norm.npy",output_folder+os.sep+"rep-gpt_neox.norm.npy")
+
 if __name__ == "__main__":
 
     model_list = {'meta-llama/Llama-2-7b-hf':32,
