@@ -81,7 +81,11 @@ def load_and_cut(layers,model,model_name):
 
     remove_layers = layers
     count = 0
-    len_layers = len(model._model.model.layers)
+    len_layers = 0
+    if 'pythia' in model_name:
+        len_layers = len(model.gpt_neox.layers)
+    else:
+        len_layers = len(model._model.model.layers)
     for i in range(0, len_layers):
         if i not in remove_layers:
             layer=''
