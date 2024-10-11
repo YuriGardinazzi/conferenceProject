@@ -11,7 +11,7 @@ import torch
 
 def check_dir(path, model_name):
 
-    folder = '.'+os.sep+path + os.sep + model_name
+    folder = path + os.sep + model_name
 
     if os.path.isdir(folder):
         print("Exists")
@@ -19,7 +19,7 @@ def check_dir(path, model_name):
         print("Folder created")
         os.makedirs(folder,exist_ok=True)
 
-    return
+    return folder
 
 def similarity_persistance(betti,ph_sim_betti):
     n_layers = len(betti)
@@ -220,9 +220,8 @@ if __name__ == "__main__":
     #assert args.model_path != None and args.output_path != None and args.zigzag_layers != None and args.model_name != None and args.betti_path != None and args.tasks != None
 
 
-    check_dir(path=args.output_folder, model_name=args.model_name)
+    final_out_path=check_dir(path=args.output_folder, model_name=args.model_name)
     final_tasks = [args.task]    
-    final_out_path = args.output_path
 
     if args.full:
         print(f"RUNNING FULL BENCHMARK {args.full}-{type(args.full)}")
