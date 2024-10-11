@@ -1,5 +1,4 @@
 # Persistence Topological feature in Large Language Models
-## Paper: ***arxiv link***
 ## With this code you can reproduce the results of the paper and it is subdivided in five main parts
 -   Extraction of the hidden representations 
 -   ZigZag algorithm execution over the representations
