@@ -91,10 +91,13 @@ def load_and_cut(layers,model,model_name):
             layer=''
             if 'pythia' in model_name:
                 layer = model._model.gpt_neox.layers[i]
+                layer.attention.layer_idx=count
             else: 
                 layer = model._model.model.layers[i]
+                layer.self_attn.layer_idx=count
             layer.layer_idx = count
-            layer.self_attn.layer_idx=count
+
+            
             new_layers.append(layer)
             count += 1
             
