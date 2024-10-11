@@ -80,7 +80,7 @@ def run(model_name,output_folder,dataset,access_token,layer_number):
     for name in target_layers:
         np.save(f"{output_folder}/rep-{name}.npy",EA.hidden_states[name])
 
-    if name == "pythia":
+    if "pythia" in model_name:
         os.rename(output_folder+os.sep+"rep-gpt_neox.final_layer_norm.npy",output_folder+os.sep+"rep-gpt_neox.norm.npy")
 
 if __name__ == "__main__":
