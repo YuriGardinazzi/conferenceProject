@@ -83,14 +83,14 @@ def load_and_cut(layers,model,model_name):
     count = 0
     len_layers = 0
     if 'pythia' in model_name:
-        len_layers = len(model.gpt_neox.layers)
+        len_layers = len(model._model.gpt_neox.layers)
     else:
         len_layers = len(model._model.model.layers)
     for i in range(0, len_layers):
         if i not in remove_layers:
             layer=''
             if 'pythia' in model_name:
-                layer = model.gpt_neox.layers[i]
+                layer = model._model.gpt_neox.layers[i]
             else: 
                 layer = model._model.model.layers[i]
             layer.layer_idx = count
@@ -99,7 +99,7 @@ def load_and_cut(layers,model,model_name):
             count += 1
             
     if 'pythia' in model_name:
-        model.gpt_neox.layers = new_layers
+        model._model.gpt_neox.layers = new_layers
     else:    
         model._model.model.layers = new_layers
     changed_num_hidden_layers = len_layers - len(remove_layers)
