@@ -124,6 +124,12 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     
+
+    
+    
+    if not os.path.isdir(args.output_folder): 
+        os.makedirs(args.output_folder) 
+
     run(reps_path=args.reps_path,
         knn=args.knn,
         dim=args.dim,
