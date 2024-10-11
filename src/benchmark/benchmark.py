@@ -221,7 +221,7 @@ if __name__ == "__main__":
 
 
     check_dir(path=args.output_folder, model_name=args.model_name)
-    final_tasks = [args.tasks]    
+    final_tasks = [args.task]    
     final_out_path = args.output_path
 
     if args.full:
