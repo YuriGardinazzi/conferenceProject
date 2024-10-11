@@ -59,7 +59,7 @@ def full_benchmark(output_path,model_name,task,access_token):
                                     batch_size="auto",\
                                     num_fewshot=5)
     
-    out_file = output_path + os.sep + model_name +"_"+task[0] + "full_bmk.json"
+    out_file = output_path + os.sep + model_name.split('/')[1] +"_"+task[0] + "full_bmk.json"
     with open(out_file,'w',encoding='utf-8') as f:
             json.dump(results['results'],f,ensure_ascii=False,indent=4)
 
@@ -150,6 +150,11 @@ def benchmark_with_cuts(output_path,model_name,task,zigzag_output,zigzag_layers,
                                           tasks= task,\
                                           device="auto",\
                                           batch_size="auto")
+            
+        out_file = output_path + os.sep + model_name.split('/')[1] +"_"+task[0] + "_"+str(p)+"_bmk.json"
+        with open(out_file,'w',encoding='utf-8') as f:
+            json.dump(results['results'],f,ensure_ascii=False,indent=4)
+
     return
 
 def benchmark_with_block_cuts(output_path,model_name,task,access_token,begin_block=0,end_block=0):
@@ -182,7 +187,7 @@ def benchmark_with_block_cuts(output_path,model_name,task,access_token,begin_blo
                                     num_fewshot=5)
 
 
-    bmk_path = output_path + os.sep + model_name+'_'+task[0] +'_'+ str(begin_block) + '_' + str(end_block)+'.json'
+    bmk_path = output_path + os.sep + model_name.split('/')[1]+'_'+task[0] +'_'+ str(begin_block) + '_' + str(end_block)+'.json'
     with open(bmk_path,'w',encoding='utf-8') as f:
         json.dump(results['results'],f,ensure_ascii=False,indent=4)
     del res_model
