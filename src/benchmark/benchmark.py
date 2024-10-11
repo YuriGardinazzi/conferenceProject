@@ -131,10 +131,6 @@ def benchmark_with_cuts(output_path,model_name,task,zigzag_output,zigzag_layers,
         r = similarity_persistance(b1,psim_1)
         list_layers = layers_to_cut_given_r(r,p=0.9)
         
-        cut_path = output_path+os.sep+'cuts_'+model_name+str(p)+'.json'
-        with open(cut_path,"w") as f:
-            json.dump(list_layers,f,indent=4)
-
         print(f"BMK with {p} as threshold")
 
         r = similarity_persistance(b1,psim_1)
@@ -149,6 +145,7 @@ def benchmark_with_cuts(output_path,model_name,task,zigzag_output,zigzag_layers,
         results = lm_eval.simple_evaluate(model=res_model,\
                                           tasks= task,\
                                           device="auto",\
+                                          num_fewshot=5,\
                                           batch_size="auto")
             
         out_file = output_path + os.sep + model_name.split('/')[1] +"_"+task[0] + "_"+str(p)+"_bmk.json"
