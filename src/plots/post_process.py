@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Apr 22 15:07:10 2024
 
-@author: karthikviswanathan
-"""
 import numpy as np
 import pandas as pd
 from collections import Counter
