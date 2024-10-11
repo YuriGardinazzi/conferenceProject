@@ -9,11 +9,15 @@ import json
 import numpy as np
 import torch
 
-def check_dir(path):
+def check_dir(path, model_name):
 
-    if not os.path.isdir(path): 
-        os.makedirs(path)
+    folder = '.'+os.sep+path + os.sep + model_name
 
+    if os.path.isdir(folder):
+        print("Exists")
+    else:
+        print("Folder created")
+        os.makedirs(folder,exist_ok=True)
 
     return
 
