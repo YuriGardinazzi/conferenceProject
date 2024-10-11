@@ -1,4 +1,4 @@
-# Persistence Topological Features in Large Language Models - ICLR 2025 Submission
+# Persitent Topological Features in Large Language Models - ICLR 2025 Submission
 ## With this code you can reproduce the results of the paper and it is subdivided in four main parts inside the folder src
 -   **representation**: folder for the extraction of the hidden representations.
 -   **zigzag** :folder for the execution fo the ZigZag algorithm over the representations.
