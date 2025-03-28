@@ -1,5 +1,12 @@
 # Rebuttal Plots
 
+## Persistence 
+![Llama2 7b](Llama2_7b_pers.png)
+![Mistral](mistral_pers.png)
+![Pythia](pythia_pers.png)
+
+Birth Relative Frequency computed on the SST Dataset with 16 splits as in Fig. 3 for the models Llama 2 7B, Mistral and Pythia
+
 ## Birth Relative Frequency
 
 ![Llama2 7b](llama2_7b_16_split.png)
