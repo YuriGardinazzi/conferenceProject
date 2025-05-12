@@ -85,7 +85,8 @@ class POSTPROCESS:
                     
                 for pair, freq in zip(pairs, frequencies):
                     freq_array[pair[1]][pair[0]] = freq
-            else : print(f"No points in hom_dim = {hdim}")
+            elif self.debug: 
+                print(f"No points in hom_dim = {hdim}")
             pis.append(freq_array)
         return np.array(pis)
     
@@ -93,7 +94,7 @@ class POSTPROCESS:
     def find_eff_pis(self, pis = None):
         if pis is None:
             pis = self.find_pis()
-        print(pis.shape)
+        if self.debug: print(pis.shape)
         eff_pis = []
         for arr in pis:
             sz = arr.shape[0]
@@ -186,9 +187,9 @@ class POSTPROCESS:
         for l in layers:
             ax.plot(div(psim_mats[hom_dim, l],bettis[hom_dim, l]), \
                      color = colormap(l/psim_mats.shape[1]), marker = '.', \
-                         label = f"$\ell = {l}$")
+                         label = f"$\\ell = {l}$")
                 
-        ax.set_title(f"$PHSim_{hom_dim}(\ell$)")
+        ax.set_title(f"$PHSim_{hom_dim}(\\ell$)")
         ax.grid(True)
         ax.axhline(0.5, c = 'black', linestyle = 'dotted')
         ax.axhline(0.3, c = 'black', linestyle = 'dotted')
@@ -207,9 +208,9 @@ class POSTPROCESS:
             ax_full.plot(corn["full"][hom_dim], marker = '.', \
                          label = f"p = {np.round(pvals[jdx], 2)}", color = color)
         
-            ax_left.set_title(f"$\kappa_{hom_dim}$ (left)")
+            ax_left.set_title(f"$\\kappa_{hom_dim}$ (left)")
             ax_left.grid(True)
-            ax_full.set_title(f"$\kappa_{hom_dim}$ (full)")
+            ax_full.set_title(f"$\\kappa_{hom_dim}$ (full)")
             ax_full.grid(True)
         
         # print(len(corns), pvals)
@@ -243,7 +244,7 @@ class POSTPROCESS:
                        title="PHSim", fontsize = "x-large")
         handles_corn, labels_corn = axes[0, 3].get_legend_handles_labels()
         fig.legend(handles_corn, labels_corn, loc='upper center', \
-                   bbox_to_anchor=(0.8, 0), ncol = 4, title="$\kappa$", \
+                   bbox_to_anchor=(0.8, 0), ncol = 4, title="$\\kappa$", \
                        fontsize = "x-large")
 
         
